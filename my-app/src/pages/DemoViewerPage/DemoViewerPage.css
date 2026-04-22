@@ -1,0 +1,355 @@
+.viewer-root {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: linear-gradient(165deg, #07111b, #0d1929);
+}
+
+.canvas-wrap {
+  position: relative;
+  width: min(calc(100vw - 24px), calc(100vh - 24px));
+  height: min(calc(100vw - 24px), calc(100vh - 24px));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(2, 4, 8, 0.52);
+  overflow: hidden;
+}
+
+.overlay-dock {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.left-dock {
+  top: 10px;
+  left: 10px;
+  width: min(340px, calc(100% - 20px));
+}
+
+.right-dock {
+  top: 10px;
+  right: 10px;
+  width: min(420px, calc(100% - 20px));
+}
+
+.brand-badge,
+.ui-panel {
+  pointer-events: auto;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: rgba(8, 14, 23, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(3px);
+  color: #ecf3ff;
+}
+
+.brand-badge strong {
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 14px;
+}
+
+.brand-badge span {
+  color: #afc0d6;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.ui-panel {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(8, 14, 23, 0.76);
+  backdrop-filter: blur(3px);
+  overflow: hidden;
+}
+
+.ui-panel summary {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #e8f5ff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ui-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.ui-panel summary::after {
+  content: '+';
+  float: right;
+  color: #9edfff;
+}
+
+.ui-panel[open] summary::after {
+  content: '-';
+}
+
+.panel-body {
+  padding: 9px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pill {
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(8, 14, 23, 0.84);
+  color: #ecf3ff;
+  font-size: 12px;
+}
+
+.play-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.play-controls button,
+.play-controls select,
+.play-controls .mini-btn {
+  background: rgba(8, 12, 18, 0.78);
+  color: #ecf3ff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 5px 9px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.play-controls button:hover,
+.play-controls select:hover,
+.play-controls .mini-btn:hover {
+  border-color: rgba(126, 212, 255, 0.62);
+}
+
+.play-controls .mini-btn {
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.toggles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(110px, 1fr));
+  gap: 6px 8px;
+}
+
+.toggles-grid label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #d8e8ff;
+  cursor: pointer;
+}
+
+.tail-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #d8e8ff;
+}
+
+.tail-row input[type='range'] {
+  flex: 1;
+}
+
+.slider-wrap {
+  position: relative;
+  width: 100%;
+  padding: 6px 0 4px;
+}
+
+.slider-wrap input[type='range'] {
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.slider-wrap input[type='range']::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.slider-wrap input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #7ed4ff;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  margin-top: -6px;
+  cursor: pointer;
+}
+
+.round-markers {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 11px;
+  height: 6px;
+  pointer-events: auto;
+}
+
+.round-marker {
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: rgba(236, 243, 255, 0.9);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.round-marker:hover {
+  transform: scale(1.2);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.kill-feed {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.kill-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(6, 10, 16, 0.54);
+}
+
+.kill-killer {
+  color: #ffd7d7;
+  font-weight: 700;
+}
+
+.kill-arrow {
+  color: #a6b8cd;
+}
+
+.kill-victim {
+  color: #d8e8ff;
+  font-weight: 700;
+}
+
+.kill-weapon {
+  margin-left: auto;
+  color: #9edfff;
+  font-size: 11px;
+}
+
+.kill-hs {
+  color: #ffcc7a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.econ-now {
+  display: grid;
+  gap: 4px;
+}
+
+.econ-head {
+  font-size: 12px;
+  color: #e8f5ff;
+  font-weight: 700;
+}
+
+.econ-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.econ-t .team-tag {
+  color: #ff9f43;
+}
+
+.econ-ct .team-tag {
+  color: #63b6ff;
+}
+
+.econ-chart {
+  display: grid;
+  gap: 5px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.econ-chart-row {
+  display: grid;
+  grid-template-columns: 34px 1fr 54px;
+  gap: 7px;
+  align-items: center;
+  font-size: 11px;
+}
+
+.econ-round {
+  color: #9db0c7;
+  font-weight: 700;
+}
+
+.econ-bars {
+  display: grid;
+  gap: 3px;
+}
+
+.econ-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.econ-bar-fill {
+  height: 100%;
+}
+
+.econ-bar-fill.t {
+  background: linear-gradient(90deg, rgba(255, 159, 67, 0.8), rgba(255, 159, 67, 0.95));
+}
+
+.econ-bar-fill.ct {
+  background: linear-gradient(90deg, rgba(99, 182, 255, 0.8), rgba(99, 182, 255, 0.95));
+}
