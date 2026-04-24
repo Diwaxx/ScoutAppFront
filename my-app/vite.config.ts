@@ -15,19 +15,13 @@ export default defineConfig({
       '@shared': path.resolve(__dirname, './src/shared'),
     },
   },
+  assetsInclude: ['**/*.txt', '**/*.jsonl'],
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-      },
-      '/out': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-      },
-      '/assets': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
+        secure: false,
       },
     },
   },

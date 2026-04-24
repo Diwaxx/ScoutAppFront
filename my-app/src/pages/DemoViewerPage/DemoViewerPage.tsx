@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useViewerStore } from '@entities/demo/model/viewerStore';
 import { RadarCanvas } from '@widgets/viewer/RadarCanvas/RadarCanvas';
@@ -12,36 +12,42 @@ import './DemoViewerPage.css';
 
 export const DemoViewerPage: React.FC = () => {
   const { matchId } = useParams<{ matchId: string }>();
-  const { loadData, isLoading, error } = useDataLoader();
-  
+  const { loadData, isLoading, error, progress } = useDataLoader();
+
+  const requestedMatchRef = useRef<string | null>(null);
+
   const isLoaded = useViewerStore((s) => s.isLoaded);
   const mapName = useViewerStore((s) => s.mapName);
   const playbackTick = useViewerStore((s) => s.playbackTick);
   const status = useViewerStore((s) => s.status);
-  
+
   useEffect(() => {
-    if (matchId) {
-      loadData(matchId);
-    }
+    if (!matchId) return;
+    if (requestedMatchRef.current === matchId) return;
+
+    requestedMatchRef.current = matchId;
+    void loadData(matchId);
   }, [matchId, loadData]);
-  
-  if (isLoading) {
+
+  if (!matchId) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-bg-1 to-bg-2">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-text font-exo">{status}</p>
+        <div className="text-center text-red-400">
+          <p className="text-xl mb-4">Match ID not found</p>
+          <Link to="/" className="text-accent hover:underline">
+            Back to home
+          </Link>
         </div>
       </div>
     );
   }
-  
+
   if (error) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-bg-1 to-bg-2">
-        <div className="text-center text-red-400">
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-bg-1 to-bg-2 px-6">
+        <div className="text-center text-red-400 max-w-2xl">
           <p className="text-xl mb-4">Error loading demo</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm whitespace-pre-wrap break-words">{error}</p>
           <Link to="/" className="mt-4 inline-block text-accent hover:underline">
             Back to home
           </Link>
@@ -49,27 +55,48 @@ export const DemoViewerPage: React.FC = () => {
       </div>
     );
   }
-  
+
+  if (isLoading || !isLoaded) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-bg-1 to-bg-2">
+        <div className="text-center w-[320px] max-w-[90vw]">
+          <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+
+          <p className="text-text font-exo mb-3">{status || 'Loading demo...'}</p>
+
+          <div className="w-full h-2 bg-card rounded-full overflow-hidden mb-2">
+            <div
+              className="h-full bg-accent transition-all duration-200"
+              style={{ width: `${Math.max(0, Math.min(progress, 100))}%` }}
+            />
+          </div>
+
+          <p className="text-sm text-muted">{progress}%</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="viewer-root">
       <div className="canvas-wrap">
         <RadarCanvas />
-        
+
         <div className="overlay-dock left-dock">
           <div className="brand-badge">
             <strong>CS2 Demo Viewer</strong>
-            <span>{mapName || 'Loading...'}</span>
+            <span>{mapName || 'Unknown map'}</span>
           </div>
-          
+
           <PlaybackControls />
           <ViewerFilters />
         </div>
-        
+
         <div className="overlay-dock right-dock">
           <TimelineSlider />
           <KillFeedPanel />
           <EconomyPanel />
-          
+
           <details className="ui-panel">
             <summary>Navigation</summary>
             <div className="panel-body">
@@ -79,9 +106,9 @@ export const DemoViewerPage: React.FC = () => {
             </div>
           </details>
         </div>
-        
+
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-muted bg-card/80 px-3 py-1 rounded-full backdrop-blur-panel">
-          Tick: {playbackTick.toFixed(1)} | {status}
+          Tick: {Number.isFinite(playbackTick) ? playbackTick.toFixed(1) : '0.0'} | {status}
         </div>
       </div>
     </div>
