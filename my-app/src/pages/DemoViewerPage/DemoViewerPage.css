@@ -8,6 +8,29 @@
   background: linear-gradient(165deg, #07111b, #0d1929);
 }
 
+.viewer-focus-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 999999;
+  pointer-events: auto;
+
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  background: rgba(20, 24, 34, 0.92);
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.viewer-focus-btn:hover {
+  background: rgba(35, 42, 58, 0.96);
+}
+
 .canvas-wrap {
   position: relative;
   width: min(calc(100vw - 24px), calc(100vh - 24px));
@@ -55,6 +78,32 @@
   color: #ecf3ff;
 }
 
+
+.viewer-focus-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+
+  background: rgba(15, 18, 28, 0.82);
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  backdrop-filter: blur(10px);
+  transition: 0.15s ease;
+}
+
+.viewer-focus-toggle:hover {
+  background: rgba(35, 42, 58, 0.95);
+  transform: translateY(-1px);
+}
 .brand-badge strong {
   text-transform: uppercase;
   letter-spacing: 0.4px;

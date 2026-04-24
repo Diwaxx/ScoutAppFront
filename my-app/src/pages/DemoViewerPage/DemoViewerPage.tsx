@@ -1,20 +1,23 @@
-import React, { useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useViewerStore } from '@entities/demo/model/viewerStore';
-import { RadarCanvas } from '@widgets/viewer/RadarCanvas/RadarCanvas';
-import { PlaybackControls } from '@widgets/viewer/PlaybackControls/PlaybackControls';
-import { TimelineSlider } from '@widgets/viewer/TimelineSlider/TimelineSlider';
-import { KillFeedPanel } from '@widgets/viewer/KillFeedPanel/KillFeedPanel';
-import { EconomyPanel } from '@widgets/viewer/EconomyPanel/EconomyPanel';
-import { ViewerFilters } from '@features/viewer-filters/ViewerFilters';
-import { useDataLoader } from './hooks/useDataLoader';
-import './DemoViewerPage.css';
+import React, { useEffect, useRef, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useViewerStore } from "@entities/demo/model/viewerStore";
+import { RadarCanvas } from "@widgets/viewer/RadarCanvas/RadarCanvas";
+import { PlaybackControls } from "@widgets/viewer/PlaybackControls/PlaybackControls";
+import { TimelineSlider } from "@widgets/viewer/TimelineSlider/TimelineSlider";
+import { KillFeedPanel } from "@widgets/viewer/KillFeedPanel/KillFeedPanel";
+import { EconomyPanel } from "@widgets/viewer/EconomyPanel/EconomyPanel";
+import { ViewerFilters } from "@features/viewer-filters/ViewerFilters";
+import { useDataLoader } from "./hooks/useDataLoader";
+import { usePlaybackLoop } from './hooks/usePlaybackLoop';
+import "./DemoViewerPage.css";
 
 export const DemoViewerPage: React.FC = () => {
   const { matchId } = useParams<{ matchId: string }>();
   const { loadData, isLoading, error, progress } = useDataLoader();
 
+  usePlaybackLoop();
   const requestedMatchRef = useRef<string | null>(null);
+  const [focusMode, setFocusMode] = useState(false);
 
   const isLoaded = useViewerStore((s) => s.isLoaded);
   const mapName = useViewerStore((s) => s.mapName);
@@ -48,7 +51,10 @@ export const DemoViewerPage: React.FC = () => {
         <div className="text-center text-red-400 max-w-2xl">
           <p className="text-xl mb-4">Error loading demo</p>
           <p className="text-sm whitespace-pre-wrap break-words">{error}</p>
-          <Link to="/" className="mt-4 inline-block text-accent hover:underline">
+          <Link
+            to="/"
+            className="mt-4 inline-block text-accent hover:underline"
+          >
             Back to home
           </Link>
         </div>
@@ -61,8 +67,9 @@ export const DemoViewerPage: React.FC = () => {
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-bg-1 to-bg-2">
         <div className="text-center w-[320px] max-w-[90vw]">
           <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-
-          <p className="text-text font-exo mb-3">{status || 'Loading demo...'}</p>
+          <p className="text-text font-exo mb-3">
+            {status || "Loading demo..."}
+          </p>
 
           <div className="w-full h-2 bg-card rounded-full overflow-hidden mb-2">
             <div
@@ -81,35 +88,52 @@ export const DemoViewerPage: React.FC = () => {
     <div className="viewer-root">
       <div className="canvas-wrap">
         <RadarCanvas />
+        <button
+          type="button"
+          className="viewer-focus-toggle"
+          onClick={() => setFocusMode((v) => !v)}
+        >
+          {focusMode ? "Show HUD" : "Focus"}
+        </button>
 
-        <div className="overlay-dock left-dock">
-          <div className="brand-badge">
-            <strong>CS2 Demo Viewer</strong>
-            <span>{mapName || 'Unknown map'}</span>
-          </div>
+        {!focusMode && (
+          <>
+            <div className="overlay-dock left-dock">
+              <div className="brand-badge">
+                <strong>CS2 Demo Viewer</strong>
+                <span>{mapName || "Unknown map"}</span>
+              </div>
 
-          <PlaybackControls />
-          <ViewerFilters />
-        </div>
-
-        <div className="overlay-dock right-dock">
-          <TimelineSlider />
-          <KillFeedPanel />
-          <EconomyPanel />
-
-          <details className="ui-panel">
-            <summary>Navigation</summary>
-            <div className="panel-body">
-              <span className="block text-sm text-muted">Wheel: zoom</span>
-              <span className="block text-sm text-muted">RMB/MMB drag: pan</span>
-              <span className="block text-sm text-muted">Double click: reset view</span>
+              <PlaybackControls onToggleFocus={() => setFocusMode(true)} />
+              <ViewerFilters />
             </div>
-          </details>
-        </div>
 
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-muted bg-card/80 px-3 py-1 rounded-full backdrop-blur-panel">
-          Tick: {Number.isFinite(playbackTick) ? playbackTick.toFixed(1) : '0.0'} | {status}
-        </div>
+            <div className="overlay-dock right-dock">
+              <TimelineSlider />
+              <KillFeedPanel />
+              <EconomyPanel />
+
+              <details className="ui-panel">
+                <summary>Navigation</summary>
+                <div className="panel-body">
+                  <span className="block text-sm text-muted">Wheel: zoom</span>
+                  <span className="block text-sm text-muted">
+                    RMB/MMB drag: pan
+                  </span>
+                  <span className="block text-sm text-muted">
+                    Double click: reset view
+                  </span>
+                </div>
+              </details>
+            </div>
+
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-muted bg-card/80 px-3 py-1 rounded-full backdrop-blur-panel">
+              Tick:{" "}
+              {Number.isFinite(playbackTick) ? playbackTick.toFixed(1) : "0.0"}{" "}
+              | {status}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

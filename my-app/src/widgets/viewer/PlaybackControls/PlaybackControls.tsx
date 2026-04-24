@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useViewerStore } from '@entities/demo/model/viewerStore';
 
-const ASSUMED_TICKRATE = 64;
+interface PlaybackControlsProps {
+  onToggleFocus?: () => void;
+}
 
-export const PlaybackControls: React.FC = () => {
+export const PlaybackControls: React.FC<PlaybackControlsProps> = ({ onToggleFocus }) => {
   const mapName = useViewerStore((s) => s.mapName);
   const playbackTick = useViewerStore((s) => s.playbackTick);
   const playbackSpeed = useViewerStore((s) => s.playbackSpeed);
@@ -15,75 +17,24 @@ export const PlaybackControls: React.FC = () => {
   const setPlaybackSpeed = useViewerStore((s) => s.setPlaybackSpeed);
   const setPlaybackTick = useViewerStore((s) => s.setPlaybackTick);
   const setPlaying = useViewerStore((s) => s.setPlaying);
-  const setViewState = useViewerStore((s) => s.setViewState);
-
-  const rafRef = useRef<number | null>(null);
-  const lastTsRef = useRef<number | null>(null);
 
   const minTick = ticksSorted[0] || 0;
   const maxTick = ticksSorted[ticksSorted.length - 1] || 0;
 
-  useEffect(() => {
-    if (!playing) {
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-      lastTsRef.current = null;
-      return;
-    }
-
-    const animate = (now: number) => {
-      if (lastTsRef.current == null) {
-        lastTsRef.current = now;
-      }
-
-      const dtSec = Math.max(0, (now - lastTsRef.current) / 1000);
-      lastTsRef.current = now;
-
-      const nextTick = playbackTick + dtSec * ASSUMED_TICKRATE * Math.max(0.1, playbackSpeed || 1);
-
-      if (nextTick >= maxTick) {
-        setPlaybackTick(maxTick);
-        setPlaying(false);
-        return;
-      }
-
-      if (nextTick < minTick) {
-        setPlaybackTick(minTick);
-      } else {
-        setPlaybackTick(nextTick);
-      }
-
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-      lastTsRef.current = null;
-    };
-  }, [playing, playbackTick, playbackSpeed, minTick, maxTick, setPlaybackTick, setPlaying]);
-
   const togglePlayPause = () => {
     if (!ticksSorted.length) return;
+
     if (playbackTick >= maxTick) {
       setPlaybackTick(minTick);
     }
-    setPlaying(!playing);
-  };
 
-  const handleFocusReset = () => {
-    setViewState({ zoom: 1, panX: 0, panY: 0 });
+    setPlaying(!playing);
   };
 
   return (
     <details className="ui-panel playback-panel" open>
       <summary>Playback</summary>
+
       <div className="panel-body">
         <div className="chips">
           <span className="pill">map: {mapName || '...'}</span>
@@ -91,7 +42,7 @@ export const PlaybackControls: React.FC = () => {
         </div>
 
         <div className="play-controls">
-          <button onClick={togglePlayPause}>
+          <button type="button" onClick={togglePlayPause}>
             {playing ? '|| pause' : '> play'}
           </button>
 
@@ -107,8 +58,13 @@ export const PlaybackControls: React.FC = () => {
             <option value="8">x8</option>
           </select>
 
-          <Link to="/players" className="mini-btn">stats</Link>
-          <button onClick={handleFocusReset}>focus</button>
+          <Link to="/players" className="mini-btn">
+            stats
+          </Link>
+
+          <button type="button" onClick={() => onToggleFocus?.()}>
+            focus
+          </button>
         </div>
 
         <span className="small">{status}</span>
