@@ -124,8 +124,20 @@ export const PlayerProfilePage: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+        <div className="profile-panel">
+            <div className="panel-title">
+              <h2>CT Position Shares</h2>
+              <span>Where he plays</span>
+            </div>
 
+            <div className="shares-list">
+              {Object.entries(player.ct_position_shares || {}).map(([key, value]) => (
+                <ShareBar key={key} label={key} value={value} />
+              ))}
+            </div>
+          </div>
+      </section>
+      
       <section className="headline-stats">
         <StatBox label="K-D" value={`${player.kills}-${player.deaths}`} sub={`K/D ${kd}`} />
         <StatBox label="ADR" value={player.adr.toFixed(1)} sub={`${player.damage} damage`} />
@@ -198,18 +210,7 @@ export const PlayerProfilePage: React.FC = () => {
             </div>
           </div>
 
-          <div className="profile-panel">
-            <div className="panel-title">
-              <h2>CT Position Shares</h2>
-              <span>Where he plays</span>
-            </div>
-
-            <div className="shares-list">
-              {Object.entries(player.ct_position_shares || {}).map(([key, value]) => (
-                <ShareBar key={key} label={key} value={value} />
-              ))}
-            </div>
-          </div>
+          
         </aside>
       </section>
     </div>
