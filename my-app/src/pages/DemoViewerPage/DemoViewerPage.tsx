@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useViewerStore } from "@entities/demo/model/viewerStore";
 import { RadarCanvas } from "@widgets/viewer/RadarCanvas/RadarCanvas";
@@ -16,8 +16,17 @@ export const DemoViewerPage: React.FC = () => {
   const { loadData, isLoading, error, progress } = useDataLoader();
 
   usePlaybackLoop();
+
+  useEffect(() => {
+    document.documentElement.classList.add("viewer-page-lock");
+    document.body.classList.add("viewer-page-lock");
+
+    return () => {
+      document.documentElement.classList.remove("viewer-page-lock");
+      document.body.classList.remove("viewer-page-lock");
+    };
+  }, []);
   const requestedMatchRef = useRef<string | null>(null);
-  const [focusMode, setFocusMode] = useState(false);
 
   const isLoaded = useViewerStore((s) => s.isLoaded);
   const mapName = useViewerStore((s) => s.mapName);
@@ -86,54 +95,40 @@ export const DemoViewerPage: React.FC = () => {
 
   return (
     <div className="viewer-root">
+      {/* Left panel */}
+      <div className="side-dock left-dock">
+        <div className="brand-badge">
+          <strong>CS2 Demo Viewer</strong>
+          <span>{mapName || "Unknown map"}</span>
+        </div>
+        <PlaybackControls />
+        <ViewerFilters />
+      </div>
+
+      {/* Radar */}
       <div className="canvas-wrap">
         <RadarCanvas />
-        <button
-          type="button"
-          className="viewer-focus-toggle"
-          onClick={() => setFocusMode((v) => !v)}
-        >
-          {focusMode ? "Show HUD" : "Focus"}
-        </button>
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-muted bg-card/80 px-3 py-1 rounded-full backdrop-blur-panel">
+          Tick:{" "}
+          {Number.isFinite(playbackTick) ? playbackTick.toFixed(1) : "0.0"}{" "}
+          | {status}
+        </div>
+      </div>
 
-        {!focusMode && (
-          <>
-            <div className="overlay-dock left-dock">
-              <div className="brand-badge">
-                <strong>CS2 Demo Viewer</strong>
-                <span>{mapName || "Unknown map"}</span>
-              </div>
+      {/* Right panel */}
+      <div className="side-dock right-dock">
+        <TimelineSlider />
+        <KillFeedPanel />
+        <EconomyPanel />
 
-              <PlaybackControls onToggleFocus={() => setFocusMode(true)} />
-              <ViewerFilters />
-            </div>
-
-            <div className="overlay-dock right-dock">
-              <TimelineSlider />
-              <KillFeedPanel />
-              <EconomyPanel />
-
-              <details className="ui-panel">
-                <summary>Navigation</summary>
-                <div className="panel-body">
-                  <span className="block text-sm text-muted">Wheel: zoom</span>
-                  <span className="block text-sm text-muted">
-                    RMB/MMB drag: pan
-                  </span>
-                  <span className="block text-sm text-muted">
-                    Double click: reset view
-                  </span>
-                </div>
-              </details>
-            </div>
-
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-muted bg-card/80 px-3 py-1 rounded-full backdrop-blur-panel">
-              Tick:{" "}
-              {Number.isFinite(playbackTick) ? playbackTick.toFixed(1) : "0.0"}{" "}
-              | {status}
-            </div>
-          </>
-        )}
+        <details className="ui-panel">
+          <summary>Navigation</summary>
+          <div className="panel-body">
+            <span className="block text-sm text-muted">Wheel: zoom</span>
+            <span className="block text-sm text-muted">RMB/MMB drag: pan</span>
+            <span className="block text-sm text-muted">Double click: reset view</span>
+          </div>
+        </details>
       </div>
     </div>
   );

@@ -638,6 +638,58 @@ function drawNades(
   drawDetonatedNades(ctx, nadesByTick, tick, width, height, tr);
 }
 
+function getPlayerBlindAmount(
+  flashByTick: Map<number, any[]> | undefined,
+  playbackTick: number,
+  steam64: string,
+) {
+  if (!flashByTick || !steam64) return 0;
+
+  const FLASH_VISUAL_TICKS = ASSUMED_TICKRATE * 3.5;
+  let best = 0;
+
+  for (const [tick, events] of flashByTick.entries()) {
+    if (tick > playbackTick) continue;
+    if (tick < playbackTick - FLASH_VISUAL_TICKS) continue;
+
+    for (const ev of events || []) {
+      const data = ev.data || {};
+
+      const victimSteam = String(
+        data.victim_steam64 ??
+          data.player_steam64 ??
+          data.steam64 ??
+          data.victim ??
+          data.player ??
+          data.target_steam64 ??
+          "",
+      );
+
+      if (victimSteam !== steam64) continue;
+
+      const rawDuration = Number(
+        data.duration ??
+          data.blind_duration ??
+          data.flash_duration ??
+          data.alpha ??
+          1,
+      );
+
+      const elapsed = playbackTick - Number(tick);
+
+      const durationTicks = Math.max(
+        ASSUMED_TICKRATE * 0.3,
+        rawDuration > 20 ? rawDuration : rawDuration * ASSUMED_TICKRATE,
+      );
+
+      const amount = clamp(1 - elapsed / durationTicks, 0, 1);
+      best = Math.max(best, amount);
+    }
+  }
+
+  return best;
+}
+
 export const RadarCanvas: React.FC<RadarCanvasProps> = ({
   width = 1024,
   height = 1024,
@@ -668,6 +720,10 @@ export const RadarCanvas: React.FC<RadarCanvasProps> = ({
 
   const nadesByTick = useViewerStore(
     (s: any) => s.nadesByTick as Map<number, any[]>,
+  );
+
+  const flashByTick = useViewerStore(
+    (s: any) => s.flashByTick as Map<number, any[]>,
   );
 
   const viewZoom = useViewerStore((s: any) => s.viewZoom ?? 1);
@@ -732,6 +788,11 @@ export const RadarCanvas: React.FC<RadarCanvasProps> = ({
       }
 
       const color = teamColor(p.team);
+      const blindAmount = getPlayerBlindAmount(
+        flashByTick,
+        playbackTick,
+        p.steam64,
+      );
 
       ctx.save();
 
@@ -747,17 +808,28 @@ export const RadarCanvas: React.FC<RadarCanvasProps> = ({
       ctx.strokeStyle = "rgba(0,0,0,0.75)";
       ctx.stroke();
 
-      const rad = (Number(p.yaw || 0) * Math.PI) / 180;
-      const dirLen = 18;
-      const dx = Math.cos(rad) * dirLen;
-      const dy = Math.sin(rad) * dirLen;
+      const yawRad = (Number(p.yaw || 0) * Math.PI) / 180;
+      const worldDirLen = 120;
+
+      const lookWorldX = p.x + Math.cos(yawRad) * worldDirLen;
+      const lookWorldY = p.y + Math.sin(yawRad) * worldDirLen;
+
+      const lookPt = worldToRadarPx(
+        lookWorldX,
+        lookWorldY,
+        canvas.width,
+        canvas.height,
+        radarTransform,
+      );
 
       ctx.beginPath();
       ctx.moveTo(pt.x, pt.y);
-      ctx.lineTo(pt.x + dx, pt.y + dy);
+      ctx.lineTo(lookPt.x, lookPt.y);
       ctx.lineWidth = 2;
-      ctx.strokeStyle = "#ffffff";
+      ctx.strokeStyle = blindAmount > 0.15 ? "#ffffff" : "#f8fafc";
+      ctx.globalAlpha = blindAmount > 0.15 ? 0.45 : 0.95;
       ctx.stroke();
+      ctx.globalAlpha = 1;
 
       const hp = clamp(Number(p.hp || 0), 0, 100);
       ctx.beginPath();
@@ -771,6 +843,31 @@ export const RadarCanvas: React.FC<RadarCanvasProps> = ({
       ctx.lineWidth = 3;
       ctx.strokeStyle = hp > 50 ? "#4ade80" : hp > 20 ? "#facc15" : "#f87171";
       ctx.stroke();
+
+      if (blindAmount > 0.02) {
+        ctx.save();
+
+        ctx.globalAlpha = 0.22 + blindAmount * 0.45;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 15 + blindAmount * 9, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.globalAlpha = 0.65 + blindAmount * 0.25;
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 18 + blindAmount * 8, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.font = "700 9px Segoe UI, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#111827";
+        ctx.fillText("FLASH", pt.x, pt.y);
+
+        ctx.restore();
+      }
 
       ctx.font = "600 12px Segoe UI, sans-serif";
       ctx.textAlign = "center";
@@ -790,6 +887,7 @@ export const RadarCanvas: React.FC<RadarCanvasProps> = ({
     radarTransform,
     players,
     nadesByTick,
+    flashByTick,
     playbackTick,
     viewZoom,
     viewPanX,

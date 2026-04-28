@@ -1,0 +1,111 @@
+{
+  "schema_version": "mirage-roles-v2",
+  "team_id": "Team Falcons",
+  "team_name": "Team Falcons",
+  "opponent_name": "multiple",
+  "sample_matches_count": 7,
+  "confidence_score": 0.35,
+  "confidence_note": "Preliminary: the sample is still small, so structure and role conclusions should be treated as soft",
+  "aggression_avg": 53.8,
+  "teamplay_avg": 54.2,
+  "stability_avg": 42.8,
+  "positioning_avg": 35.9,
+  "clutch_avg": 25,
+  "role_distribution": {
+    "awp": 1,
+    "entry": 1,
+    "lurker": 1,
+    "support": 2
+  },
+  "primary_role_slots": {
+    "awp": [
+      "m0NESY"
+    ],
+    "entry": [
+      "kyxsan"
+    ],
+    "lurker": [
+      "TeSeS"
+    ],
+    "support": [
+      "NiKo"
+    ]
+  },
+  "secondary_role_slots": {
+    "entry": [
+      "kyousuke"
+    ],
+    "support": [
+      "kyxsan"
+    ]
+  },
+  "ct_function_roles": {
+    "anchor": 2,
+    "awp": 1,
+    "support": 2
+  },
+  "ct_active_roles": {
+    "A anchor": 1,
+    "B anchor": 1,
+    "Connector": 1,
+    "Short": 1,
+    "Window": 1
+  },
+  "ct_role_types": {
+    "anchor": 2,
+    "awp": 1,
+    "flex": 2
+  },
+  "ct_role_slots": {
+    "anchor": [
+      "kyxsan",
+      "TeSeS"
+    ],
+    "awp": [
+      "m0NESY"
+    ],
+    "entry": [
+      "kyousuke"
+    ],
+    "support": [
+      "NiKo"
+    ]
+  },
+  "t_role_slots": {
+    "awp": [
+      "m0NESY"
+    ],
+    "carry": [
+      "kyousuke"
+    ],
+    "entry": [
+      "kyxsan"
+    ],
+    "lurker": [
+      "TeSeS"
+    ],
+    "support": [
+      "NiKo"
+    ]
+  },
+  "ct_active_role_slots": {
+    "A anchor": [
+      "kyxsan"
+    ],
+    "B anchor": [
+      "TeSeS"
+    ],
+    "Connector": [
+      "NiKo"
+    ],
+    "Short": [
+      "kyousuke"
+    ],
+    "Window": [
+      "m0NESY"
+    ]
+  },
+  "playstyle": "balanced",
+  "structure_level": "semi-structured",
+  "missing_roles": []
+}

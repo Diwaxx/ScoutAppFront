@@ -1,0 +1,694 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+html,
+body,
+#root {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+:root {
+  --bg: #0b0f16;
+  --panel: #252a33;
+  --panel-2: #202630;
+  --player: #243248;
+  --player-2: #1a2332;
+
+  --border: #1f252e;
+  --border-soft: rgba(95, 111, 133, 0.38);
+  --border-blue: rgba(128, 168, 220, 0.45);
+
+  --text: #ffffff;
+  --muted: #a7adb8;
+  --muted-dark: #6f7785;
+
+  --blue: #8fbaf0;
+  --green: #43cf87;
+  --red: #e17d7d;
+
+  --radius: 22px;
+}
+
+.scope-team-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(92, 130, 185, 0.22), transparent 34%),
+    radial-gradient(circle at top right, rgba(38, 50, 71, 0.5), transparent 38%),
+    linear-gradient(180deg, #101827 0%, #0b0f16 46%, #080b10 100%);
+  color: var(--text);
+  padding: 38px 28px 80px;
+  font-family: 'Inter', sans-serif;
+}
+
+.scope-hero,
+.scope-roster-section,
+.scope-analytics-section {
+  width: 100%;
+  max-width: 1220px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.scope-hero {
+  margin-bottom: 34px;
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  background:
+    linear-gradient(135deg, rgba(143, 186, 240, 0.1), rgba(255, 255, 255, 0.025)),
+    rgba(18, 24, 34, 0.96);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.eyebrow,
+.block-kicker {
+  color: var(--blue);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.scope-hero h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 52px;
+  line-height: 0.95;
+  margin: 0 0 14px;
+  color: #fff;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.hero-tags span {
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(143, 186, 240, 0.1);
+  border: 1px solid rgba(143, 186, 240, 0.22);
+  color: #dbeafe;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.hero-note {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.scope-main-btn {
+  background: linear-gradient(180deg, #b9d8ff, var(--blue));
+  color: #05070a;
+  text-decoration: none;
+  font-weight: 900;
+  font-family: 'Rajdhani', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 13px 22px;
+  border-radius: 14px;
+  white-space: nowrap;
+  transition: 0.18s ease;
+  border: 1px solid rgba(255,255,255,0.22);
+}
+
+.scope-main-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(122, 162, 216, 0.28);
+}
+
+.scope-roster-section {
+  margin-bottom: 54px;
+}
+
+.block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.block-header h2 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 900;
+  color: #fff;
+  margin: 0;
+}
+
+.block-header > span {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+/* ROSTER */
+
+.scope-roster-big {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(185px, 1fr));
+  gap: 18px;
+}
+
+.scope-player {
+  min-height: 300px;
+  border: 1px solid var(--border-blue);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(143, 186, 240, 0.28), transparent 44%),
+    linear-gradient(180deg, var(--player), var(--player-2));
+  text-decoration: none;
+  color: #fff;
+  padding: 22px;
+  transition: 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(143, 186, 240, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.scope-player::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.09) 42%, transparent 68%);
+  transform: translateX(-120%);
+  transition: 0.45s ease;
+}
+
+.scope-player::after {
+  content: '';
+  position: absolute;
+  inset: auto 20px 0;
+  height: 4px;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(90deg, transparent, #93c5fd, transparent);
+  opacity: 0.95;
+}
+
+.scope-player:hover {
+  transform: translateY(-8px) scale(1.018);
+  border-color: rgba(185, 216, 255, 0.95);
+  box-shadow:
+    0 30px 82px rgba(0, 0, 0, 0.72),
+    0 0 40px rgba(143, 186, 240, 0.22);
+}
+
+.scope-player:hover::before {
+  transform: translateX(120%);
+}
+
+.scope-player.captain {
+  background:
+    radial-gradient(circle at top, rgba(185, 216, 255, 0.35), transparent 46%),
+    linear-gradient(180deg, #2d3b55, #1e283a);
+  border-color: rgba(185, 216, 255, 0.85);
+}
+
+.player-top-line {
+  height: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.captain-mark {
+  color: #dbeafe;
+  background: rgba(143, 186, 240, 0.14);
+  border: 1px solid rgba(143, 186, 240, 0.28);
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+}
+
+.player-flag {
+  font-size: 18px;
+}
+
+.player-avatar {
+  width: 112px;
+  height: 112px;
+  margin: 18px auto 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle, rgba(143, 186, 240, 0.26), rgba(10, 14, 21, 0.82));
+  border: 2px solid rgba(219, 234, 254, 0.38);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 0 0 7px rgba(143, 186, 240, 0.055),
+    0 13px 30px rgba(0, 0, 0, 0.48);
+}
+
+.player-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-avatar span {
+  font-family: 'Rajdhani', sans-serif;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 34px;
+}
+
+.scope-player strong {
+  display: block;
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 26px;
+  line-height: 1;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.scope-player small {
+  display: block;
+  text-align: center;
+  color: #c3cfdf;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  margin-top: 7px;
+  position: relative;
+  z-index: 1;
+}
+
+.player-bottom {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid rgba(219, 234, 254, 0.14);
+  font-family: 'Rajdhani', sans-serif;
+  position: relative;
+  z-index: 1;
+}
+
+.player-bottom span {
+  color: #bfdbfe;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.player-bottom b {
+  color: #fff;
+  font-weight: 900;
+  font-size: 17px;
+}
+
+/* ANALYTICS */
+
+.scope-grid {
+  width: 100%;
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.metrics-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.metric-card.large {
+  grid-column: span 2;
+  min-height: 320px;
+  padding: 28px 26px;
+}
+
+.metric-card.large .scope-card-head span {
+  font-size: 26px;
+}
+
+.metric-card.large .metric-value {
+  font-size: 56px;
+}
+
+.metric-card.large p {
+  font-size: 18px;
+}
+.two-col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.scope-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)),
+    var(--panel);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.32);
+}
+
+/* METRIC CARDS LIKE SCREENSHOT */
+
+.metric-card {
+  min-height: 360px;
+  padding: 32px 28px 26px;
+  border-radius: 24px;
+  background: #282d36;
+  display: flex;
+  flex-direction: column;
+}
+
+.scope-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  align-items: flex-start;
+  color: #ffffff;
+}
+
+.scope-card-head span {
+  color: #ffffff;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+}
+
+.scope-card-head strong,
+.metric-value {
+  font-family: 'Inter', sans-serif;
+  font-size: 58px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -2px;
+  color: #ffffff;
+}
+
+.metric-value.good {
+  color: var(--green);
+}
+
+.metric-value.mid {
+  color: #ffffff;
+}
+
+.metric-value.bad {
+  color: #ffffff;
+}
+
+.metric-ring {
+  display: none !important;
+}
+
+.metric-scale {
+  margin-top: 34px;
+  margin-bottom: 24px;
+}
+
+.metric-scale-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+  height: 10px;
+  overflow: visible;
+}
+
+.metric-scale-segment {
+  height: 10px;
+  background: rgba(255,255,255,0.14);
+}
+
+.metric-scale-bad {
+  border-radius: 999px 0 0 999px;
+}
+
+.metric-scale-good {
+  border-radius: 0 999px 999px 0;
+}
+
+.metric-card.bad .metric-scale-bad {
+  background: var(--red);
+}
+
+.metric-card.mid .metric-scale-mid {
+  background: var(--blue);
+}
+
+.metric-card.good .metric-scale-good {
+  background: var(--green);
+}
+
+.metric-scale-thumb {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 30px;
+  border-radius: 999px;
+  background: #dbeafe;
+  border: 4px solid #0b0f16;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
+}
+
+.metric-scale-labels {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.metric-scale-labels span {
+  display: none;
+}
+
+.metric-card.bad .metric-scale-labels::after {
+  content: 'Плохо';
+  color: var(--red);
+}
+
+.metric-card.mid .metric-scale-labels::after {
+  content: 'Средне';
+  color: var(--blue);
+}
+
+.metric-card.good .metric-scale-labels::after {
+  content: 'Хорошо';
+  color: var(--green);
+}
+
+.metric-card p {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.45;
+  font-weight: 400;
+  letter-spacing: -0.8px;
+}
+
+/* OTHER CARDS */
+
+.scope-card-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 23px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.role-card,
+.distribution-card,
+.summary-card {
+  padding: 20px;
+}
+
+.role-list,
+.distribution-list {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.role-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+  border: 1px solid rgba(39, 46, 59, 0.95);
+  background: rgba(255,255,255,0.035);
+  border-radius: 12px;
+}
+
+.role-row span,
+.distribution-label {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.role-row strong {
+  color: #fff;
+  font-size: 13px;
+  text-align: right;
+}
+
+.distribution-row {
+  display: grid;
+  gap: 7px;
+}
+
+.distribution-label {
+  display: flex;
+  justify-content: space-between;
+}
+
+.distribution-label b {
+  color: #fff;
+}
+
+.distribution-track {
+  height: 8px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.distribution-track div {
+  height: 100%;
+  background: linear-gradient(90deg, #5f7fa9, #93c5fd);
+  border-radius: 999px;
+}
+
+.summary-card {
+  margin-top: 18px;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.summary-card p {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.summary-status {
+  padding: 14px 18px;
+  border: 1px solid rgba(147, 197, 253, 0.22);
+  background: rgba(147, 197, 253, 0.08);
+  border-radius: 14px;
+  min-width: 260px;
+}
+
+.summary-status span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.summary-status strong {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1180px) {
+  .scope-roster-big {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .scope-hero {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .scope-team-page {
+    padding: 24px 14px 64px;
+  }
+
+  .scope-roster-big,
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .scope-hero h1 {
+    font-size: 38px;
+  }
+
+  .block-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .metric-card {
+  min-height: 260px;
+  padding: 22px 20px 20px;
+  border-radius: 22px;
+  background: #282d36;
+  display: flex;
+  flex-direction: column;
+}
+.scope-card-head {
+  gap: 18px;
+}
+
+.scope-card-head span {
+  font-size: 20px;
+}
+
+.scope-card-head strong,
+.metric-value {
+  font-size: 42px;
+}
+
+  .scope-card-head span {
+    font-size: 24px;
+  }
+
+  .scope-card-head strong,
+  .metric-value {
+    font-size: 54px;
+  }
+
+  .metric-card p {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.45;
+  font-weight: 400;
+}
+}

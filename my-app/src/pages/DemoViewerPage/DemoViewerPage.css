@@ -1,69 +1,81 @@
+html.viewer-page-lock,
+body.viewer-page-lock {
+  width: 100%;
+  height: 100%;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+body.viewer-page-lock #root {
+  height: 100vh;
+  overflow: hidden !important;
+}
+
 .viewer-root {
   width: 100%;
   height: 100vh;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   padding: 12px;
   background: linear-gradient(165deg, #07111b, #0d1929);
-}
-
-.viewer-focus-btn {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 999999;
-  pointer-events: auto;
-
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-
-  background: rgba(20, 24, 34, 0.92);
-  color: #fff;
-
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.viewer-focus-btn:hover {
-  background: rgba(35, 42, 58, 0.96);
+  overflow: hidden;
 }
 
 .canvas-wrap {
   position: relative;
-  width: min(calc(100vw - 24px), calc(100vh - 24px));
-  height: min(calc(100vw - 24px), calc(100vh - 24px));
+  flex-shrink: 0;
+  width: min(calc(100vh - 24px), calc(100vw - 720px));
+  height: min(calc(100vh - 24px), calc(100vw - 720px));
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   background: rgba(2, 4, 8, 0.52);
   overflow: hidden;
 }
 
-.overlay-dock {
-  position: absolute;
+/* Side docks - outside canvas */
+.side-dock {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  pointer-events: none;
+  width: 340px;
+  max-width: 340px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+
+.side-dock::-webkit-scrollbar {
+  width: 4px;
+}
+.side-dock::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 999px;
 }
 
 .left-dock {
-  top: 10px;
-  left: 10px;
-  width: min(340px, calc(100% - 20px));
+  align-items: flex-end;
 }
 
 .right-dock {
-  top: 10px;
-  right: 10px;
-  width: min(420px, calc(100% - 20px));
+  align-items: flex-start;
+}
+
+/* Keep old overlay-dock class for compatibility but unused */
+.overlay-dock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .brand-badge,
 .ui-panel {
-  pointer-events: auto;
+  width: 100%;
 }
 
 .brand-badge {
@@ -78,32 +90,6 @@
   color: #ecf3ff;
 }
 
-
-.viewer-focus-toggle {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 1000;
-
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-
-  background: rgba(15, 18, 28, 0.82);
-  color: #fff;
-
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-
-  backdrop-filter: blur(10px);
-  transition: 0.15s ease;
-}
-
-.viewer-focus-toggle:hover {
-  background: rgba(35, 42, 58, 0.95);
-  transform: translateY(-1px);
-}
 .brand-badge strong {
   text-transform: uppercase;
   letter-spacing: 0.4px;
