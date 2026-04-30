@@ -194,7 +194,12 @@
 .stats-table {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 14px;
+}
+
+.role-panel {
+  display: grid;
+  gap: 14px;
 }
 
 .profile-info-row {
@@ -225,7 +230,7 @@
 }
 
 .role-badge-large {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   padding: 18px;
   text-align: center;
   border-radius: 18px;
@@ -353,4 +358,120 @@
   .profile-side-card {
     grid-template-columns: 1fr;
   }
+}
+
+.faceit-account-card {
+  min-height: 245px;
+}
+
+.faceit-account-body {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.faceit-account-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 20px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top, rgba(143, 186, 240, 0.35), transparent 55%),
+    linear-gradient(180deg, #2d3b55, #1e283a);
+  border: 1px solid rgba(185, 216, 255, 0.65);
+}
+
+.faceit-account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.faceit-account-avatar span {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 30px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.faceit-account-info {
+  display: grid;
+  gap: 5px;
+}
+
+.faceit-account-info strong {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28px;
+  line-height: 1;
+  color: #fff;
+}
+
+.faceit-account-info span,
+.faceit-account-info small,
+.faceit-account-empty span {
+  color: #9aa6b8;
+  font-size: 13px;
+}
+
+.faceit-account-empty {
+  display: grid;
+  gap: 8px;
+}
+
+.faceit-account-empty strong {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28px;
+}
+.demo-job-box {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  max-width: 620px;
+}
+
+.demo-job-box input {
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(143, 186, 240, 0.26);
+  background: rgba(255, 255, 255, 0.045);
+  color: #fff;
+  outline: none;
+}
+
+.demo-job-box input::placeholder {
+  color: #8793a6;
+}
+
+.demo-job-box button {
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: linear-gradient(180deg, #b9d8ff, #8fbaf0);
+  color: #05070a;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.demo-job-box button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.demo-job-status {
+  color: #43cf87;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.demo-job-error {
+  color: #e17d7d;
+  font-size: 13px;
+  font-weight: 800;
 }

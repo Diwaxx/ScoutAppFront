@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { clsx } from 'clsx';
+import { FaceitAuthButton } from '@features/auth/FaceitAuthButton';
 
 const navigation = [
   { name: 'Dashboard', href: '/' },
@@ -12,17 +13,19 @@ const navigation = [
 
 export const App: React.FC = () => {
   const location = useLocation();
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-bg-1 to-bg-2">
       <nav className="border-b border-card-border bg-card/50 backdrop-blur-panel">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
+
+            {/* LEFT */}
             <div className="flex items-center gap-8">
               <Link to="/" className="font-exo font-bold text-lg text-text">
-                TeamScope
+                TeamScopeвв
               </Link>
-              
+
               <div className="flex gap-1">
                 {navigation.map((item) => (
                   <Link
@@ -40,20 +43,27 @@ export const App: React.FC = () => {
                 ))}
               </div>
             </div>
-            
+
+            {/* RIGHT */}
             <div className="flex items-center gap-4">
-              <span className="text-sm text-muted">Team: Astralis</span>
+              <FaceitAuthButton />
+
+              <span className="text-sm text-muted">
+                Team: Astralisasdsd
+              </span>
+
               <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
-                    <span className="text-accent text-sm font-medium">AS</span>
-                  </div>
-                </div>
+                <span className="text-accent text-sm font-medium">AS</span>
               </div>
             </div>
-          </nav>
-          
-          <main>
-            <Outlet />
-          </main>
+
+          </div>
         </div>
-      );
-    };
+      </nav>
+
+      <main>
+        <Outlet />
+      </main>
+    </div>
+  );
+};

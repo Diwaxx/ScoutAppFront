@@ -1,15 +1,16 @@
-import { createBrowserRouter } from 'react-router-dom';
-import { App } from './App';
-import { DashboardPage } from '@pages/DashboardPage/DashboardPage';
-import { PlayersPage } from '@pages/PlayersPage/PlayersPage';
-import { PlayerProfilePage } from '@pages/PlayerProfilePage/PlayerProfilePage';
-import { TeamPage } from '@pages/TeamPage/TeamPage';
-import { CandidatesPage } from '@pages/CandidatesPage/CandidatesPage';
-import { DemoViewerPage } from '@pages/DemoViewerPage/DemoViewerPage';
+import { createBrowserRouter } from "react-router-dom";
+import { App } from "./App";
+import { DashboardPage } from "@pages/DashboardPage/DashboardPage";
+import { PlayersPage } from "@pages/PlayersPage/PlayersPage";
+import { PlayerProfilePage } from "@pages/PlayerProfilePage/PlayerProfilePage";
+import { TeamPage } from "@pages/TeamPage/TeamPage";
+import { CandidatesPage } from "@pages/CandidatesPage/CandidatesPage";
+import { DemoViewerPage } from "@pages/DemoViewerPage/DemoViewerPage";
+import { MatchDetailsPage } from "@pages/MatchDetailsPage/MatchDetailsPage";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
     children: [
       {
@@ -17,23 +18,32 @@ export const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: 'players',
+        path: "players",
         element: <PlayersPage />,
       },
       {
-        path: 'players/:playerId',
+        path: "players/:playerId",
         element: <PlayerProfilePage />,
       },
       {
-        path: 'teams/:teamId',
-        element: <TeamPage />,
+        path: "teams/:teamId",
+        children: [
+          {
+            index: true,
+            element: <TeamPage />,
+          },
+          {
+            path: "candidates",
+            element: <CandidatesPage />,
+          },
+          {
+            path: "test-match",
+            element: <MatchDetailsPage />,
+          },
+        ],
       },
       {
-        path: 'teams/:teamId/candidates',
-        element: <CandidatesPage />,
-      },
-      {
-        path: 'demo/:matchId',
+        path: "demo/:matchId",
         element: <DemoViewerPage />,
       },
     ],

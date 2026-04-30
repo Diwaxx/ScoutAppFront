@@ -1,0 +1,40 @@
+.faceit-auth-btn {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 85, 0, 0.35);
+  background: linear-gradient(180deg, #ff6a00, #df4b00);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.faceit-auth-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(255, 85, 0, 0.22);
+}
+
+.faceit-auth-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.faceit-auth-btn.authed {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(143, 186, 240, 0.12);
+  border-color: rgba(143, 186, 240, 0.35);
+  color: #dbeafe;
+}
+
+.faceit-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #43cf87;
+  box-shadow: 0 0 10px rgba(67, 207, 135, 0.55);
+}
+

@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./TeamPage.css";
 import teamSummary from "@/../public/out/team_summary.json";
+import mirageRadar from "@/assets/radar/de_mirage.png";
+import { FALCONS_MATCHES } from "@/shared/data/falconsMatches";
 
 type TeamSummary = typeof teamSummary;
 const summary = teamSummary as TeamSummary;
@@ -18,7 +20,7 @@ const MOCK_PLAYERS = [
     isCaptain: false,
   },
   {
-    playerId: "2",
+    playerId: "76561198057282432",
     nickname: "kyxsan",
     avatar: null,
     elo: 2300,
@@ -28,7 +30,7 @@ const MOCK_PLAYERS = [
     isCaptain: true,
   },
   {
-    playerId: "3",
+    playerId: "76561197996678278",
     nickname: "TeSeS",
     avatar: null,
     elo: 2250,
@@ -38,7 +40,7 @@ const MOCK_PLAYERS = [
     isCaptain: false,
   },
   {
-    playerId: "4",
+    playerId: "76561198041683378",
     nickname: "NiKo",
     avatar: null,
     elo: 2500,
@@ -48,7 +50,7 @@ const MOCK_PLAYERS = [
     isCaptain: false,
   },
   {
-    playerId: "5",
+    playerId: "76561199032006224",
     nickname: "kyousuke",
     avatar: null,
     elo: 2400,
@@ -59,38 +61,50 @@ const MOCK_PLAYERS = [
   },
 ];
 
+const CT_RADAR_POSITIONS: Record<
+  string,
+  { x: number; y: number; dx?: number; dy?: number }
+> = {
+ Window: { x: 45, y: 43, dx: -10, dy: 10 },      // m0NESY ниже
+  Connector: { x: 49, y: 53, dx: 14, dy: 4 },     // NiKo правее
+  Short: { x: 53, y: 38, dx: 24, dy: -6 },        // kyousuke выше
+  "A anchor": { x: 53, y: 75, dx: 8, dy: 12 },
+  "B anchor": { x: 24, y: 32, dx: -6, dy: -6 },
+};
+
 function pct(value: number) {
   return `${Math.round(value)}%`;
 }
 
 function scoreClass(value: number) {
-  if (value >= 70) return 'good';
-  if (value >= 35) return 'mid';
-  return 'bad';
+  if (value >= 70) return "good";
+  if (value >= 35) return "mid";
+  return "bad";
 }
 
-function formatRoleName(role: string) {
-  return role.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
+function getPlayerActivePosition(nickname: string) {
+  const slots = summary.ct_active_role_slots as Record<string, string[]> | undefined;
+  if (!slots) return null;
 
-function getRolePlayers(slots: Record<string, string[]> | undefined) {
-  if (!slots) return [];
-  return Object.entries(slots).map(([role, players]) => ({ role, players }));
+  for (const [position, players] of Object.entries(slots)) {
+    if (players.includes(nickname)) return position;
+  }
+
+  return null;
 }
 
 const MetricCard: React.FC<{
   title: string;
   value: number;
   hint: string;
-  className?: string; 
+  className?: string;
 }> = ({ title, value, hint, className }) => {
-  const quality = value >= 70 ? "good" : value >= 45 ? "mid" : "bad";
+  const quality = scoreClass(value);
 
   return (
-    <div className={`scope-card metric-card ${scoreClass(value)} ${className || ''}`}>
+    <div className={`scope-card metric-card ${quality} ${className || ""}`}>
       <div className="scope-card-head">
         <span>{title}</span>
-
         <strong className={`metric-value ${quality}`}>{pct(value)}</strong>
       </div>
 
@@ -148,55 +162,84 @@ const PlayerCard: React.FC<{ player: (typeof MOCK_PLAYERS)[number] }> = ({
   </Link>
 );
 
-const RoleCard: React.FC<{
-  title: string;
-  slots: Record<string, string[]> | undefined;
-}> = ({ title, slots }) => {
-  const rows = getRolePlayers(slots);
-
+const TeamRadarCard: React.FC = () => {
   return (
-    <div className="scope-card role-card">
-      <div className="scope-card-title">{title}</div>
+    <div className="scope-card team-radar-card">
+      <div className="team-radar-head">
+        <div>
+          <p className="block-kicker">Map setup</p>
+          <h2>Mirage CT Setup</h2>
+        </div>
 
-      <div className="role-list">
-        {rows.map((row) => (
-          <div className="role-row" key={row.role}>
-            <span>{formatRoleName(row.role)}</span>
-            <strong>{row.players.join(", ")}</strong>
-          </div>
-        ))}
+        <div className="team-radar-tags">
+          <span>{summary.structure_level}</span>
+          <span>CT positions</span>
+        </div>
+      </div>
+
+      <div className="team-radar-wrap">
+        <img className="team-radar-img" src={mirageRadar} alt="de_mirage radar" />
+
+        {MOCK_PLAYERS.map((player) => {
+          const position = getPlayerActivePosition(player.nickname);
+          if (!position) return null;
+
+          const point = CT_RADAR_POSITIONS[position];
+          if (!point) return null;
+
+          return (
+            <Link
+              key={player.playerId}
+              to={`/players/${player.playerId}`}
+              className={`radar-player-chip ${player.isCaptain ? "captain" : ""}`}
+              style={{
+                left: `calc(${point.x}% + ${point.dx || 0}px)`,
+                top: `calc(${point.y}% + ${point.dy || 0}px)`,
+              }}
+            >
+              <span className="radar-player-avatar">
+                {player.nickname.slice(0, 2).toUpperCase()}
+              </span>
+
+              <span className="radar-player-info">
+                <strong>{player.nickname}</strong>
+                <small>{position}</small>
+              </span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
 };
-
-const DistributionCard: React.FC<{
-  title: string;
-  data: Record<string, number>;
-}> = ({ title, data }) => {
-  const max = Math.max(...Object.values(data), 1);
-
-  return (
-    <div className="scope-card distribution-card">
-      <div className="scope-card-title">{title}</div>
-
-      <div className="distribution-list">
-        {Object.entries(data).map(([key, value]) => (
-          <div className="distribution-row" key={key}>
-            <div className="distribution-label">
-              <span>{formatRoleName(key)}</span>
-              <b>{value}</b>
-            </div>
-            <div className="distribution-track">
-              <div style={{ width: `${(value / max) * 100}%` }} />
-            </div>
-          </div>
-        ))}
+const MatchesPreviewBlock: React.FC = () => (
+  <section className="matches-preview-section">
+    <div className="block-header">
+      <div>
+        <p className="block-kicker">History</p>
+        <h2>All matches</h2>
       </div>
+      <span>Click map to open details</span>
     </div>
-  );
-};
 
+    <div className="matches-preview-grid">
+      {FALCONS_MATCHES.map((match) => (
+        <Link
+          key={match.id}
+          to={`/teams/team-1/matches/${match.id}`}
+          className={`match-preview-card ${match.result}`}
+        >
+          <div>
+            <strong>{match.map}</strong>
+            <span>{match.title}</span>
+          </div>
+
+          <b>{match.score}</b>
+        </Link>
+      ))}
+    </div>
+  </section>
+);
 export const TeamPage: React.FC = () => {
   return (
     <div className="scope-team-page">
@@ -209,9 +252,7 @@ export const TeamPage: React.FC = () => {
             <span>{summary.playstyle}</span>
             <span>{summary.structure_level}</span>
             <span>{summary.sample_matches_count} matches</span>
-            <span>
-              confidence {Math.round(summary.confidence_score * 100)}%
-            </span>
+            <span>confidence {Math.round(summary.confidence_score * 100)}%</span>
           </div>
 
           <p className="hero-note">{summary.confidence_note}</p>
@@ -251,43 +292,42 @@ export const TeamPage: React.FC = () => {
         </div>
 
         <div className="scope-grid metrics-grid">
-         
           <MetricCard
             title="Teamplay"
             value={summary.teamplay_avg}
             hint="Utility, trading and coordinated actions."
             className="large"
           />
- 
+
           <MetricCard
             title="Positioning"
             value={summary.positioning_avg}
             hint="Map control quality and role discipline."
             className="large"
           />
+
           <MetricCard
             title="Clutch"
             value={summary.clutch_avg}
             hint="Late-round conversion and pressure handling."
             className="large"
           />
-                    <MetricCard
+
+          <MetricCard
             title="Aggression"
             value={summary.aggression_avg}
             hint="Tempo, entry activity and willingness to take space."
-            
           />
+
           <MetricCard
             title="Stability"
             value={summary.stability_avg}
             hint="How repeatable and controlled the team structure is."
-            
           />
         </div>
 
-        <div className="scope-grid two-col">
-          <RoleCard title="T-side role slots" slots={summary.t_role_slots} />
-          <RoleCard title="CT-side role slots" slots={summary.ct_role_slots} />
+        <div className="scope-grid radar-grid">
+          <TeamRadarCard />
         </div>
 
         <div className="scope-card summary-card">
@@ -306,8 +346,11 @@ export const TeamPage: React.FC = () => {
               {summary.playstyle} / {summary.structure_level}
             </strong>
           </div>
+          
         </div>
+        <MatchesPreviewBlock />
       </section>
+      
     </div>
   );
 };
